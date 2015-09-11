@@ -1,0 +1,24 @@
+{
+  "name": "ItemId",
+  "version": "1.0.0",
+  "description": "Site-globally unique 64-bit user IDs",
+  "main": "itemid.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fredricrylander/itemid.git"
+  },
+  "author": "Fredric Rylander <fredric.rylander@gmail.com> (https://github.com/fredricrylander)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fredricrylander/itemid/issues"
+  },
+  "homepage": "https://github.com/fredricrylander/itemid",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.3.2",
+    "mongodb-core": "^1.2.12"
+  }
+}

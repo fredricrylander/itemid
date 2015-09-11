@@ -1,6 +1,6 @@
 {
-  "name": "ItemId",
-  "version": "1.0.0",
+  "name": "itemid",
+  "version": "1.0.1",
   "description": "Site-globally unique 64-bit user IDs",
   "main": "itemid.js",
   "scripts": {

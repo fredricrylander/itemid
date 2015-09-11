@@ -113,7 +113,7 @@
  * monotonically rising for each millisecond, i.e. the counter is not bound
  * to the millisecond value (it is not restarted for each millisecond) and
  * therefor does not enforce a strict order for new IDs generated within
- * the same millisecond. IDs produced whithin the same millisecond can be
+ * the same millisecond. IDs produced whithin the same millisecond should be
  * thought of as having random order.
  *
  *

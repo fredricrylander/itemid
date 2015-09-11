@@ -22,7 +22,7 @@ The first 44 bits denote a millisecond timestamp since midnight on the 1 of Janu
 
 
 ### 2. Counter (12 bits)
-The next 12 bits denote a counter value that is kept for each machine, starting with a random value. This will enable each machine to genrate up to 4096 unique IDs every millisecond. Note that the counter is not monotonically rising for each millisecond, i.e. the counter is not bound to the millisecond value (it is not restarted for each millisecond) and therefor does not enforce a strict order for new IDs generated within the same millisecond. IDs produced whithin the same millisecond can be thought of as having random order.
+The next 12 bits denote a counter value that is kept for each machine, starting with a random value. This will enable each machine to genrate up to 4096 unique IDs every millisecond. Note that the counter is not monotonically rising for each millisecond, i.e. the counter is not bound to the millisecond value (it is not restarted for each millisecond) and therefor does not enforce a strict order for new IDs generated within the same millisecond. IDs produced whithin the same millisecond should be thought of as having random order.
 
 
 ### 3. Machine ID (8 bits)

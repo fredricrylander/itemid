@@ -9,17 +9,16 @@ The solution allows for up to 256 machines to simultaniously create 4096 unique 
 
 Inspiration
 -----------
-[The ItemId-object was inspired by Instagram’s blog article](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram).
-[As well as from MongoDB’s ObjectId specification](http://docs.mongodb.org/manual/reference/object-id/).
+The `ItemId`-object was inspired by [Instagram’s blog article](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram) about how they shard IDs, as well as from [MongoDB’s ObjectId specification](http://docs.mongodb.org/manual/reference/object-id/).
 
 Overview
 --------
-ItemIDs are made up of three parts, 1) a millisecond timestamp, 2) a counter value, and 3) a machine ID.
+`ItemId`s are made up of three parts, **1**) a millisecond timestamp, **2**) a counter value, and **3**) a machine ID.
 
 ### 1. Timestamp (44 bits)
-The first 44 bits denote a millisecond timestamp since midnight on the 1 of January, 1970. 44 bits of milliseconds may represent >557 years, which gives us unique IDs until 2527 (0xfffffffffff/1000/60/60/24/365.25 ~= 557.)
+The first 44 bits denote a millisecond timestamp since midnight on the 1 of January, 1970. 44 bits of milliseconds may represent >557 years, which gives us unique IDs until the year 2527 (0xfffffffffff/1000/60/60/24/365.25 ~= 557.)
 
-NOTE: if your database, e.g. PostgreSQL, does not have an unsigned 64-bit integer type, then the rollover will happen in 2248. A description of why is available in the documentation for `toPostgreSQL()`.
+**NOTE:** The rollover will happen in the year 2248 if your database does not handle unsigned 64-bit integers, e.g. PostgreSQL (more info is available in the inline doc for `toPostgreSQL()`.)
 
 
 ### 2. Counter (12 bits)
@@ -31,4 +30,4 @@ The last 8 bits denote the machine ID, allowing for up to 256 machines to cooper
 
 API Documentation
 -----------------
-I’m afraid there’s only the inline doc at this point.
+I’m afraid the only API doc is the inline doc at this point.

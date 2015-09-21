@@ -2,7 +2,7 @@
 
 var should = require('chai').should();
 var ItemId = require('../itemid');
-var Long   = require('mongodb-core').BSON.Long;
+var Long   = require('bson').Long;
 
 describe('#constructor', function () {
     it('Verifies that an ItemId can be constructed from a string ID', function () {

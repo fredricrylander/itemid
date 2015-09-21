@@ -5,7 +5,15 @@ The idea with `ItemId` is to allow for site-unique IDs that are practical to use
 
 The IDs are 64-bit integers. Represented in JavaScript by two 32-bit ints or a 16 character long hexadecimal string.
 
-The solution allows for up to 256 machines to simultaniously create 4096 unique IDs (i.e. up to 1,048,576 unique IDs) per millisecond without the need for any type of centralisation or crosstalk between servers.
+The solution allows for up to 256 machines to simultaneously create 4096 unique IDs (i.e. up to 1,048,576 unique IDs) per millisecond without the need for any type of centralization or crosstalk between servers.
+
+Installation
+------------
+`npm install --save itemid`
+
+**NOTE:** If this module is used together with MongoDB then it is important that `ItemId` requires the same `bson` module as `mongodb-core` does. It may help to reduce module duplication in the project’s module tree by running the following command in the project’s root directory.
+
+`npm dedup bson`
 
 Inspiration
 -----------
@@ -26,8 +34,74 @@ The next 12 bits denote a counter value that is kept for each machine, starting 
 
 
 ### 3. Machine ID (8 bits)
-The last 8 bits denote the machine ID, allowing for up to 256 machines to cooperate simultaneously without the need for communication.
+The last 8 bits denote the machine ID, allowing for up to 256 machines to cooperate simultaneously without the need for communication. By default the machine ID is based on the machine’s hostname, but it can be set via `setMachineId()`.
 
-API Documentation
------------------
-I’m afraid the only API doc is the inline doc at this point.
+Quick Guide
+-----------
+```javascript
+var ItemId = require('itemid');
+
+// Create a new ID object (e.g. to use in a MongoDB query):
+var id = new ItemId();
+
+// Instantiate a new ItemId object with a given string ID:
+var knownId = new ItemId('143e899570000101');
+
+// Create a new string ID:
+var strId = ItemId.newId();
+
+// Validate a string ID:
+var isValid = ItemId.test(strId);
+
+// Create a boundary ID, e.g. to use in a lower/higher-than query:
+var boundaryId = ItemId.createFromTime(Date.UTC(2014, 0, 31));
+
+// Extract the date and timestamp from an ID:
+var date = id.getDate();
+var ts   = id.getTimestamp();
+
+// Extract the ID of the machine that the ID was created on:
+var machineId = id.getMachineId();
+```
+
+Use with MongoDB
+----------------
+```javascript
+// Note that the prototype extensions on `Long` enables the `_id` value of
+// a returned MongoDB document to be automagically converted into an
+// ItemId-string by `JSON.stringify()`. E.g. create a new user document:
+db.users.insert({
+	_id: new ItemId(),
+	email: 'name@example.com'
+});
+
+// And then, retrieve and return the same user document:
+db.users.findOne(
+	{ email: 'name@example.com' },
+	function (err, user) {
+		if (err) throw err;
+		if (user) res.send(200, { user: user }) else res.send(404);
+	}
+);
+
+// The returned data would look like:
+{ 'user': { '_id': '147ac2eee0a0963d', 'email': 'name@example.com' } }
+```
+
+Use with MySQL and/or PostgreSQL
+--------------------------------
+```javascript
+var id = new ItemId();
+
+// Use `toMySQL()` or `toPostgreSQL()` when inserting rows, e.g.:
+connection.query('INSERT INTO users SET ?', {
+	id: id.toMySQL(),
+	email: 'name@example.com'
+});
+
+// And cast IDs to hexadecimal representation when selecting data in MySQL:
+connection.query('SELECT HEX(id) AS id, email FROM users', function () {...});
+
+// As well as in PostgreSQL:
+client.query('SELECT to_hex(id) AS id, email FROM users', function () {...});
+```

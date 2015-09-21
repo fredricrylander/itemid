@@ -1,127 +1,5 @@
 /**
- * Distributed site-unique 64-bit user IDs
- * =======================================
- *
- * The idea with ItemId is to allow for site-unique IDs that are practical
- * to use in several areas of a Node.js site. Easily generated in JavaScript
- * and at the same time a good fit for primary IDs in databases.
- *
- * The IDs are 64-bit integers. Represented in JavaScript by two 32-bit ints
- * or a 16 character long hexadecimal string.
- *
- * The solution allows for up to 256 machines to simultaniously create 4096
- * unique IDs (i.e. up to 1,048,576 unique IDs) per millisecond without the
- * need for any type of centralisation or crosstalk between servers.
- *
- *
- * Inspiration
- * -----------
- *
- * The ItemId-object was inspired by Instagram’s blog article:
- *
- * - http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram
- *
- * As well as from MongoDB’s ObjectId specification:
- *
- * - http://docs.mongodb.org/manual/reference/object-id/
- *
- *
- * Usage
- * -----
- *
- * ```js
- *     var ItemId = require('itemid').ItemId;
- *
- *     // Create a new ID object (e.g. to use in a MongoDB query):
- *     var id = new ItemId();
- *
- *     // Instantiate a new ItemId object with a given ID:
- *     var knownId = new ItemId('143e899570000101');
- *
- *     // Create a new string ID:
- *     var strId = ItemId.newId();
- *
- *     // Create a boundary ID, e.g. to use in a lower/higher-than query:
- *     var boundaryId = ItemId.createFromTime(Date.UTC(2014, 0, 31));
- *
- *     // Set the machine ID for a specific machine:
- *     ItemId.setMachineId(255);
- *
- *     // Getting the ID from a `Long` type, e.g. in a MongoDB
- *     // query callback (`doc` being the retrieved document):
- *     var idFromLong = ItemId.createFromLong(doc._id);
- *
- *     // Prototype extension version (the prototype extension only works
- *     // if this module uses the very same `bson` module as the current
- *     // MongoDB client does!):
- *     var idFromLong = doc._id.newItemId();
- *
- *     // Getting the string representation from a `Long` type,
- *     // e.g. in a MongoDB query callback (`doc` being the retrieved
- *     // document):
- *     var strIdFromLong = ItemId.strFromLong(doc._id);
- *
- *     // Prototype extension versions. The `Long` type’s `toString`
- *     // and `toJSON` functions has been extended in order to return the long
- *     // value in its hexadecimal string form (the prototype extensions only
- *     // works if this module uses the very same `bson` module as the current
- *     // MongoDB client does!):
- *     var strIdFromLong = doc._id.toString();
- *     var strIdFromLong = doc._id.toJSON();
- *
- *     // Note that the prototype extensions enable the "_id" value to
- *     // automagically be converted into an ItemId-string by
- *     // `JSON.stringify()` to JSON. Thus a typical way to work with ItemId’s
- *     // could look like the following, first inserting a new user:
- *     db.users.insert({ _id: new ItemId(), email: 'name@example.com' });
- *
- *     // And then, retrieve the same user:
- *     db.users.findOne({ email: 'name@example.com' }, function (err, user) {
- *         if (err) throw err;
- *         if (user) res.send(200, { user: user }) else res.send(404);
- *     });
- *
- *     // The returned data would look something like:
- *     { 'user': { '_id': '147ac2eee0a0963d', 'email': 'name@example.com' } }
- * ```
- *
- *
- * Overview
- * --------
- *
- * ItemIDs are made up of three parts, 1) a millisecond timestamp,
- * 2) a counter value, and 3) a machine ID.
- *
- *
- * ### 1. Timestamp (44 bits)
- *
- * The first 44 bits denote a millisecond timestamp since midnight on the
- * 1 of January, 1970. 44 bits of milliseconds may represent >557 years,
- * which gives us unique IDs until 2527
- * (0xfffffffffff/1000/60/60/24/365.25 ~= 557.)
- *
- * NOTE: if your database, e.g. PostgreSQL, does not have an unsigned 64-bit
- * integer type, then the rollover will happen in 2248. A description of why
- * is available in the documentation for `toPostgreSQL()`.
- *
- *
- * ### 2. Counter (12 bits)
- *
- * The next 12 bits denote a counter value that is kept for each machine,
- * starting with a random value. This will enable each machine to genrate
- * up to 4096 unique IDs every millisecond. Note that the counter is not
- * monotonically rising for each millisecond, i.e. the counter is not bound
- * to the millisecond value (it is not restarted for each millisecond) and
- * therefor does not enforce a strict order for new IDs generated within
- * the same millisecond. IDs produced whithin the same millisecond should be
- * thought of as having random order.
- *
- *
- * ### 3. Machine ID (8 bits)
- *
- * The last 8 bits denote the machine ID, allowing for up to 256 machines
- * to cooperate simultaneously without the need for communication.
- *
+ * Distributed site-unique 64-bit user IDs.
  *
  * @author Fredric Rylander, https://github.com/fredricrylander
  * @date 2014-01-31
@@ -133,7 +11,7 @@
 
 // Import must-have libraries.
 var crypto = require('crypto');
-var Long   = require('mongodb-core').BSON.Long;
+var Long   = require('bson').Long;
 var os     = require('os');
 var util   = require('util');
 

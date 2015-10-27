@@ -307,8 +307,8 @@ function createFromDate(date) {
  * @return {ItemId} The resulting `ItemId` object.
  */
 function createFromLong(long) {
-    if (!(long instanceof Long)) {
-        throw new Error('ItemId.createFromLong: expected a Long object.');
+    if (!long.hasOwnProperty('low_') || !long.hasOwnProperty('high_')) {
+        throw new Error('ItemId.strFromLong: expected a MongoDB Long object.');
     }
     return new ItemId(long.low_, long.high_);
 }
@@ -382,7 +382,7 @@ function setMachineId(id) {
  *     `Long` object.
  */
 function strFromLong(long) {
-    if (!(long instanceof Long)) {
+    if (!long.hasOwnProperty('low_') || !long.hasOwnProperty('high_')) {
         throw new Error('ItemId.strFromLong: expected a MongoDB Long object.');
     }
     return stringify(long.low_, long.high_);

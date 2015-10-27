@@ -25,7 +25,7 @@ var ITEM_ID_regex = /^[0-9a-fA-F]{16}$/;
 // Private Unit-global Variables ==============================================
 
 // Initate the user ID counter with a random number.
-var ITEM_ID_counter = parseInt(Math.random() * 0xfff, 10);
+var ITEM_ID_counter = Math.round(Math.random() * 0xfff);
 
 // Initiate the machine ID constant.
 var ITEM_ID_machine_id = null;

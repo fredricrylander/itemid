@@ -17,6 +17,17 @@ describe('#constructor', function () {
         id.getCounterValue().should.equal(3534);
         id.getMachineId().should.equal(61);
     });
+    it('Verifies that the ItemId constructor throws an Error on bad input', function () {
+        [
+            ['not a number', 0],
+            [0, 'not a number']
+        ].forEach(function (ith) {
+            (function () {
+                var id = new ItemId(ith[0], ith[1]);
+                console.log('id:', id.toJSON());
+            }).should.Throw(Error);
+        });
+    });
 });
 
 describe('#compare', function () {
@@ -42,6 +53,11 @@ describe('#createFromDate', function () {
             id.getMachineId().should.equal(0);
        }
     });
+    it('Verifies that createFromDate expects a Date object', function () {
+        (function () {
+            ItemId.createFromDate(new Object());
+        }).should.Throw(Error);
+    });
 });
 
 describe('#createFromLong', function () {
@@ -52,6 +68,23 @@ describe('#createFromLong', function () {
         l.low_ = id1.low_;
         var id2 = ItemId.createFromLong(l);
         id2.equal(id1).should.equal(true);
+    });
+    it('Verifies that createFromLong expects a MongoDB Long type', function () {
+        var id1 = new ItemId('14fb3ee4b75dce3d')
+        var l = new Long();
+        l.high_ = id1.high_;
+        l.low_ = id1.low_;
+        delete l.high_;
+        (function () {
+            ItemId.createFromLong(l);
+        }).should.Throw(Error);
+        l = new Long();
+        l.high_ = id1.high_;
+        l.low_ = id1.low_;
+        delete l.low_;
+        (function () {
+            ItemId.createFromLong(l);
+        }).should.Throw(Error);
     });
 });
 
@@ -64,6 +97,13 @@ describe('#createFromTime', function () {
             id.getCounterValue().should.equal(0);
             id.getMachineId().should.equal(0);
        }
+    });
+    it('Verifies that createFromTime expects a timestamp', function () {
+        [-1, (0xfffffffffff + 1), '1441922517727'].forEach(function (ith) {
+            (function () {
+                ItemId.createFromTime(ith);
+            }).should.Throw(Error);
+        });
     });
 });
 
@@ -130,6 +170,13 @@ describe('#setMachineId', function () {
         ItemId.setMachineId(originalMachineId).should.equal(0xff);
         new ItemId().getMachineId().should.equal(originalMachineId);
     });
+    it('Verifies that setMachineId expects a number', function () {
+        [{ first: 0x3d }, 'not a number', NaN, -1, (0xff + 1)].forEach(function (ith) {
+            (function () {
+                ItemId.setMachineId(ith);
+            }).should.Throw(Error);
+        });
+    });
 });
 
 describe('#strFromLong', function () {
@@ -139,6 +186,23 @@ describe('#strFromLong', function () {
         l.high_ = id.high_;
         l.low_ = id.low_;
         ItemId.strFromLong(l).should.equal(id.valueOf());
+    });
+    it('Verifies that strFromLong expects a MongoDB Long type', function () {
+        var id1 = new ItemId('14fb3ee4b75dce3d')
+        var l = new Long();
+        l.high_ = id1.high_;
+        l.low_ = id1.low_;
+        delete l.high_;
+        (function () {
+            ItemId.createFromLong(l);
+        }).should.Throw(Error);
+        l = new Long();
+        l.high_ = id1.high_;
+        l.low_ = id1.low_;
+        delete l.low_;
+        (function () {
+            ItemId.createFromLong(l);
+        }).should.Throw(Error);
     });
 });
 

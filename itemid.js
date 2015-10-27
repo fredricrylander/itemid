@@ -59,15 +59,23 @@ var ItemId = function (arg1, arg2) {
     // The constructor may have been called with an empty argument list, a
     // hexadecimal string ID or two 32-bit values (representing low/high
     // parts of the 64-bit ID.)
-    var low = 0;
-    var high = 0;
+    var low = NaN;
+    var high = NaN;
     if (arguments.length < 2) {
         // Use the specified ID or construct a new one.
         var id = arg1 ? arg1 + '' : newId();
 
-        // Split the ID into low and high parts.
-        low = parseInt(id.slice(-8), 16);       // Low 32 bits.
-        high = parseInt(id.slice(-16, -8), 16); // High 32 bits.
+        if (id.length === 16) {
+            // Split the ID into low and high parts.
+            low = parseInt(id.slice(-8), 16);       // Low 32 bits.
+            high = parseInt(id.slice(-16, -8), 16); // High 32 bits.
+        }
+        else {
+            // Try to parse the argument as if it is a decimal string representation.
+            var long = Long.fromString(id, 10);
+            low = long.low_;
+            high = long.high_;
+        }
     }
     // Assume the two given arguments are low/high parts of the 64-bit integer.
     else {
@@ -76,7 +84,7 @@ var ItemId = function (arg1, arg2) {
     }
 
     // Complain if the incoming arguments were faulty.
-    if (Number.isNaN(low) || Number.isNaN(high)) {
+    if (Number.isNaN(Number(low)) || Number.isNaN(Number(high))) {
         var message = 'ItemId: ';
         switch (arguments.length) {
             case 1:

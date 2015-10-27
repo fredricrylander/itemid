@@ -11,6 +11,12 @@ describe('#constructor', function () {
         id.getCounterValue().should.equal(3534);
         id.getMachineId().should.equal(61);
     });
+    it('Verifies that an ItemId can be constructed from a decimal string representation', function () {
+        var id = new ItemId('1511871251962777149');
+        id.getTimestamp().should.equal(1441832782709);
+        id.getCounterValue().should.equal(3534);
+        id.getMachineId().should.equal(61);
+    });
 });
 
 describe('#compare', function () {

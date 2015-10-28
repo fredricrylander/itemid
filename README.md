@@ -15,9 +15,17 @@ Installation
 
 `npm dedup bson`
 
+Consider adding the `dedup` command to the project’s `postinstall` script hook.
+
+```json
+"scripts": {
+  "postinstall": "npm dedup bson"
+}
+```
+
 Inspiration
 -----------
-The `ItemId`-object was inspired by [Instagram’s blog article](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram) about how they shard IDs, as well as from [MongoDB’s ObjectId specification](http://docs.mongodb.org/manual/reference/object-id/).
+The `ItemId`-object was inspired by [Instagram’s blog article](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram) about how they shard IDs, as well as by [MongoDB’s ObjectId specification](http://docs.mongodb.org/manual/reference/object-id/).
 
 Overview
 --------

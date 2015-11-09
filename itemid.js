@@ -326,7 +326,7 @@ function createFromLong(long) {
  */
 function createFromTime(timestamp) {
     if (typeof timestamp !== 'number' || timestamp < 0 || timestamp > 0xfffffffffff) {
-        throw new Error('ItemId.createFromTime: expected an integer representing milliseconds since Unix epoch.');
+        throw new Error('ItemId.createFromTime: expected an integer representing milliseconds since Unix Epoch.');
     }
     // Adding 5 zeroes (20 bits) for the 12-bit counter value and 8-bit machine ID.
     return new ItemId(('00000000000' + timestamp.toString(16)).slice(-11) + '00000');

@@ -396,8 +396,8 @@ function strFromLong(long) {
  * @param {integer} high The high 32 bits of the ID.
  */
 function stringify(low, high) {
-    return (high >= 0xfffffff ? high.toString(16) : (high >= 0 ? '0' + high.toString(16) : (high + 0x100000000).toString(16))) +
-            (low >= 0xfffffff ? low.toString(16) : (low >= 0 ? '0' + low.toString(16) : (low + 0x100000000).toString(16)));
+    return (high >= 0xfffffff ? high.toString(16) : (high >= 0 ? ('00000000' + high.toString(16)).slice(-8) : (high + 0x100000000).toString(16))) +
+            (low >= 0xfffffff ? low.toString(16) : (low >= 0 ? ('00000000' + low.toString(16)).slice(-8) : (low + 0x100000000).toString(16)));
 }
 
 /**

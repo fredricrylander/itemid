@@ -45,7 +45,7 @@ describe('#compare', function () {
 
 describe('#createFromDate', function () {
     it('Verifies that an ItemId can be created from a Date object', function () {
-        var dates = [new Date(), new Date(1441922517727), new Date(0), new Date(0xfffffffffff)];
+        var dates = [new Date(), new Date(1441922517727), new Date(0), new Date(0xfffffffffff), new Date('2015-10-20')];
         for (var ith in dates) {
             var id = ItemId.createFromDate(dates[ith]);
             id.getTimestamp().should.equal(dates[ith].getTime());
@@ -221,6 +221,14 @@ describe('#toJSON', function () {
     it('Verifies that an ItemId can be converted to a hexadecimal string', function () {
         var id = new ItemId('14fb3ee4b75dce3d');
         id.toJSON().should.equal('14fb3ee4b75dce3d');
+
+        // Date that has a `low_` value of 0.
+        ItemId.createFromDate(new Date('2015-10-20')).toJSON().should.equal('150828ba00000000');
+
+        // Should return a string of 16 zeros.
+        id.high_ = 0;
+        id.low_ = 0;
+        id.toJSON().should.equal('0000000000000000');
     });
 });
 

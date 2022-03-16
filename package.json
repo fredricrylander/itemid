@@ -21,6 +21,6 @@
     "mocha": "^2.3.2"
   },
   "dependencies": {
-    "bson": "^1.0.6"
+    "bson": "^4.6.1"
   }
 }

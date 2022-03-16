@@ -47,29 +47,29 @@ The last 8 bits denote the machine ID, allowing for up to 256 machines to cooper
 Quick Guide
 -----------
 ```javascript
-var ItemId = require('itemid');
+const ItemId = require('itemid');
 
 // Create a new ID object (e.g. to use in a MongoDB query):
-var id = new ItemId();
+const id = new ItemId();
 
 // Instantiate a new ItemId object with a given string ID:
-var knownId = new ItemId('143e899570000101');
+const knownId = new ItemId('143e899570000101');
 
 // Create a new string ID:
-var strId = ItemId.newId();
+const strId = ItemId.newId();
 
 // Validate a string ID:
-var isValid = ItemId.test(strId);
+const isValid = ItemId.test(strId);
 
 // Create a boundary ID, e.g. to use in a lower/higher-than query:
-var boundaryId = ItemId.createFromTime(Date.UTC(2014, 0, 31));
+const boundaryId = ItemId.createFromTime(Date.UTC(2014, 0, 31));
 
 // Extract the date and timestamp from an ID:
-var date = id.getDate();
-var ts   = id.getTimestamp();
+const date = id.getDate();
+const ts   = id.getTimestamp();
 
 // Extract the ID of the machine that the ID was created on:
-var machineId = id.getMachineId();
+const machineId = id.getMachineId();
 ```
 
 Use with MongoDB
@@ -86,7 +86,7 @@ db.users.insert({
 // And then, retrieve and return the same user document:
 db.users.findOne(
 	{ email: 'name@example.com' },
-	function (err, user) {
+	(err, user) => {
 		if (err) throw err;
 		if (user) res.send(200, { user: user }) else res.send(404);
 	}
@@ -99,7 +99,7 @@ db.users.findOne(
 Use with MySQL and/or PostgreSQL
 --------------------------------
 ```javascript
-var id = new ItemId();
+const id = new ItemId();
 
 // Use `toMySQL()` or `toPostgreSQL()` when inserting rows, e.g.:
 connection.query('INSERT INTO users SET ?', {
